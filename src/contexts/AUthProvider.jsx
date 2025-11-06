@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { useEffect, useState } from "react";
 import { auth } from "../firebase/firebase.init";
 import { AuthContext } from "./AuthContext";
 
@@ -17,7 +22,7 @@ const AUthProvider = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-   // ✅ NEW FUNCTION
+  // ✅ NEW FUNCTION
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
@@ -26,6 +31,25 @@ const AUthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        const loggedUser = { email: currentUser.email };
+        fetch("http://localhost:3000/getToken", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(loggedUser),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("after getting token", data);
+            localStorage.setItem('token', data.token)
+          });
+      }
+      else {
+        localStorage.removeItem('token')
+        
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -36,13 +60,11 @@ const AUthProvider = ({ children }) => {
     signInUser,
     logOut,
     user,
-    loading
+    loading,
   };
 
   return (
-    <AuthContext.Provider value={authInfo}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );
 };
 
