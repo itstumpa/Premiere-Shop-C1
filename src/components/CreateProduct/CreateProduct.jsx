@@ -1,9 +1,12 @@
 import axios from 'axios';
 import React from 'react';
-import { data } from 'react-router';
 import Swal from 'sweetalert2';
+import useAuth from '../hooks/useAuth';
+import useAxios from '../hooks/useAxios';
 
 const CreateProduct = () => {
+      const {user} = useAuth()
+      const axiosInstance = useAxios();
 const handleCreateAProduct = e =>{
       e.preventDefault();
       const title = e.target.title.value;
@@ -12,18 +15,34 @@ const handleCreateAProduct = e =>{
       const price_max = e.target.price_max.value;
       console.log(title, image, price_min, price_max)
 
-      const newProduct ={title, image, price_max, price_min}
-      axios.post('http://localhost:3000/products', newProduct)
-      .then (data =>{
-            console.log(data.data)
-            if(data.data.insertedId){
+      const newProduct ={title, image, price_max, price_min, 
+            email: user.email,
+            seller_name: user.displayName
+
+      }
+
+      // axios.post('http://localhost:3000/products', newProduct)
+      // .then (data =>{
+      //       console.log(data.data)
+      //       if(data.data.insertedId){
+      //             Swal.fire({
+      //                         title: "Good job!",
+      //                         text: "Your Product has been Created!",
+      //                         icon: "success",
+      //                       });
+      //       }
+      // })
+axiosInstance.post('products', newProduct)
+.then(data =>{
+      console.log(data.data)
+      if(data.data.insertedId){
                   Swal.fire({
                               title: "Good job!",
                               text: "Your Product has been Created!",
                               icon: "success",
                             });
-            }
-      })
+}})
+
 }
 
       
