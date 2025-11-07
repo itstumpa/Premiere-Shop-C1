@@ -3,6 +3,7 @@ import { BsArrowLeft } from "react-icons/bs"; // Importing the back arrow icon
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../contexts/AuthContext";
+import axios from "axios";
 
 const ProductDetails = () => {
   const product = useLoaderData();
@@ -73,14 +74,49 @@ const ProductDetails = () => {
       });
   };
 
-  useEffect(() => {
-    fetch(`http://localhost:3000/products/bids/${productId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("bids for this product", data);
-        setBids(data);
-      });
-  }, [productId]);
+
+// useEffect(() =>{
+//   axios.get(`http://localhost:3000/products/bids/${productId}`)
+//   .then((data)=> {
+//     console.log('bids for this product', data)
+
+//   })
+// },[productId]);
+
+
+//  useEffect(() => {
+//   axios
+//     .get(`http://localhost:3000/products/bids/${productId}`)
+//     .then((res) => {
+//       console.log("bids for this product", res.data);
+//       setBids(res.data); // ✅ store only the actual bids array
+//     })
+//     .catch((err) => console.error(err));
+// }, [productId]);
+
+useEffect(() => {
+    if (user?.email) {
+      axios.get(`http://localhost:3000/products/bids/${productId}`,{
+        headers:{
+          authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+        .then((res) => {
+          console.log(res.data);
+          setBids(res.data);
+        });
+    }
+  }, [user, productId]);
+
+
+  // useEffect(() => {
+  //   fetch(`http://localhost:3000/products/bids/${productId}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log("bids for this product", data);
+  //       setBids(data);
+  //     });
+  // }, [productId]);
 
   return (
     <div className="pt-20 bg-base-200">
@@ -281,8 +317,7 @@ const ProductDetails = () => {
             <tbody>
               {/* row 1 */}
 
-              {bids.map((bid, index) => (
-                <tr>
+              {bids.map((bid, index) => <tr key={bid._id}>
                   <th>{index + 1} </th>
 
                   <td>
@@ -307,7 +342,7 @@ const ProductDetails = () => {
                     <button className="btn btn-ghost btn-xs">details</button>
                   </th>
                 </tr>
-              ))}
+              )}
               {/* row 2 */}
             </tbody>
           </table>

@@ -8,28 +8,12 @@ const MyBids = () => {
 
   console.log('token', user.accessToken)
 
-// Send token to the server and verify token 
-  // useEffect(() => {
-  //   if (user?.email) {
-  //     fetch(`http://localhost:3000/bids?email=${user.email}`,{
-  //       headers:{
-  //         authorization: `Bearer ${localStorage.getItem('token')}`
-  //       }
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data);
-  //         setBids(data);
-  //       });
-  //   }
-  // }, [user]);
-
-
+// Send token to the server and verify token jwt
   useEffect(() => {
     if (user?.email) {
       fetch(`http://localhost:3000/bids?email=${user.email}`,{
         headers:{
-          authorization: `Bearer ${user.accessToken}`
+          authorization: `Bearer ${localStorage.getItem('token')}`
         }
       })
         .then((res) => res.json())
@@ -39,6 +23,22 @@ const MyBids = () => {
         });
     }
   }, [user]);
+
+// firebase token
+  // useEffect(() => {
+  //   if (user?.email) {
+  //     fetch(`http://localhost:3000/bids?email=${user.email}`,{
+  //       headers:{
+  //         authorization: `Bearer ${user.accessToken}`
+  //       }
+  //     })
+  //       .then((res) => res.json())
+  //       .then((data) => {
+  //         console.log(data);
+  //         setBids(data);
+  //       });
+  //   }
+  // }, [user]);
 
   const handleDeleteBid = (_id) => {
     Swal.fire({
@@ -89,7 +89,7 @@ const MyBids = () => {
             </tr>
           </thead>
           <tbody>
-            {bids.map((bid, index) => (
+            {bids?.map((bid, index) => (
               <tr key={bid._id}>
                 <td>{index + 1}</td>
                 <td>
