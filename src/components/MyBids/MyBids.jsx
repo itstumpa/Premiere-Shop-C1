@@ -1,11 +1,12 @@
 import { use, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../contexts/AuthContext";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const MyBids = () => {
   const { user } = use(AuthContext);
   const [bids, setBids] = useState([]);
-
+const axiosSecure = useAxiosSecure();
   console.log('token', user.accessToken)
 
 // Send token to the server and verify token jwt
@@ -26,19 +27,13 @@ const MyBids = () => {
 
 // firebase token
   // useEffect(() => {
-  //   if (user?.email) {
-  //     fetch(`http://localhost:3000/bids?email=${user.email}`,{
-  //       headers:{
-  //         authorization: `Bearer ${user.accessToken}`
-  //       }
-  //     })
-  //       .then((res) => res.json())
+  //   axiosSecure.get(`/bids?email=${user.email}`)
   //       .then((data) => {
   //         console.log(data);
   //         setBids(data);
-  //       });
-  //   }
-  // }, [user]);
+  //       })
+  // }, [user, axiosSecure]);
+
 
   const handleDeleteBid = (_id) => {
     Swal.fire({

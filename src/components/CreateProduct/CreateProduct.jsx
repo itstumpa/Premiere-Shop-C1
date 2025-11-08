@@ -1,12 +1,16 @@
-import axios from 'axios';
-import React from 'react';
+// import React from 'react';
 import Swal from 'sweetalert2';
 import useAuth from '../hooks/useAuth';
-import useAxios from '../hooks/useAxios';
+import useAxiosSecure from '../hooks/useAxiosSecure';
+
+// import useAxios from '../hooks/useAxios';
+
+
 
 const CreateProduct = () => {
       const {user} = useAuth()
-      const axiosInstance = useAxios();
+      // const axiosInstance = useAxios();
+      const axiosSecure = useAxiosSecure();
 const handleCreateAProduct = e =>{
       e.preventDefault();
       const title = e.target.title.value;
@@ -20,7 +24,7 @@ const handleCreateAProduct = e =>{
             seller_name: user.displayName
 
       }
-
+// 1st detail option 
       // axios.post('http://localhost:3000/products', newProduct)
       // .then (data =>{
       //       console.log(data.data)
@@ -32,7 +36,10 @@ const handleCreateAProduct = e =>{
       //                       });
       //       }
       // })
-axiosInstance.post('products', newProduct)
+
+      
+      // 2nd components Option 
+axiosSecure.post('products', newProduct)
 .then(data =>{
       console.log(data.data)
       if(data.data.insertedId){
