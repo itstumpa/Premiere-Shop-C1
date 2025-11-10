@@ -1,10 +1,10 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { use, useEffect } from "react";
 import { useNavigate } from "react-router";
 import useAuth from "./useAuth";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://smart-deals-server-alpha.vercel.app",
 });
 
 const useAxiosSecure = () => {
@@ -16,20 +16,24 @@ const useAxiosSecure = () => {
     (user) => {
       // request interceptor
       const requestInterceptor = instance.interceptors.request.use((config) => {
+        const token = use.accessToken;
+        if (token) {
+          //    config.headers.Authorization = `Bearer ${user.accessToken}`;
+          config.headers.Authorization = `Bearer ${token}`;
+        }
         console.log(config);
-        config.headers.Authorization = `Bearer ${user.accessToken}`;
         return config;
       });
 
       // response interceptor
-      instance.interceptors.response.use(
+      const responseInterceptor = instance.interceptors.response.use(
         (res) => {
           return res;
         },
         (err) => {
           const status = err.status;
           if (status === 401 || status === 403) {
-            console.log("logout the user for bad request");
+            //      console.log("logout the user for bad request");
             logOut().then(() => {
               navigate("/register");
             });
@@ -39,6 +43,7 @@ const useAxiosSecure = () => {
 
       return () => {
         instance.interceptors.request.eject(requestInterceptor);
+        instance.interceptors.request.eject(responseInterceptor);
       };
     },
     [user, logOut, navigate]

@@ -33,7 +33,7 @@ const AUthProvider = ({ children }) => {
       setUser(currentUser);
       if (currentUser) {
         const loggedUser = { email: currentUser.email };
-        fetch("http://localhost:3000/getToken", {
+        fetch("https://smart-deals-server-alpha.vercel.app/getToken", {
           method: "POST",
           headers: {
             "content-type": "application/json",
@@ -43,12 +43,10 @@ const AUthProvider = ({ children }) => {
           .then((res) => res.json())
           .then((data) => {
             console.log("after getting token", data);
-            localStorage.setItem('token', data.token)
+            localStorage.setItem("token", data.token);
           });
-      }
-      else {
-        localStorage.removeItem('token')
-        
+      } else {
+        localStorage.removeItem("token");
       }
       setLoading(false);
     });

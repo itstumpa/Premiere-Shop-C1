@@ -10,10 +10,10 @@ import Home from "./components/Home/Home.jsx";
 import Login from "./components/Login/Login.jsx";
 import MyBids from "./components/MyBids/MyBids.jsx";
 import MyProducts from "./components/MyProducts/MyProducts.jsx";
+import ProductDetails from "./components/ProductDetails/ProductDetails.jsx";
 import Register from "./components/Register/Register.jsx";
 import AUthProvider from "./contexts/AUthProvider.jsx";
 import "./index.css";
-import ProductDetails from "./components/ProductDetails/ProductDetails.jsx";
 
 const router = createBrowserRouter([
   {
@@ -39,10 +39,14 @@ const router = createBrowserRouter([
       {
         path: "productdetails/:id",
         loader: ({ params }) =>
-          fetch(`http://localhost:3000/products/${params.id}`),
-        element: (<PrivateRoute>
-          <ProductDetails></ProductDetails>
-          </PrivateRoute>),
+          fetch(
+            `https://smart-deals-server-alpha.vercel.app/products/${params.id}`
+          ),
+        element: (
+          <PrivateRoute>
+            <ProductDetails></ProductDetails>
+          </PrivateRoute>
+        ),
       },
       {
         path: "myproducts",

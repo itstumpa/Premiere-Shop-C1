@@ -1,9 +1,9 @@
+import axios from "axios";
 import { use, useEffect, useRef, useState } from "react";
 import { BsArrowLeft } from "react-icons/bs"; // Importing the back arrow icon
 import { useLoaderData } from "react-router";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../contexts/AuthContext";
-import axios from "axios";
 
 const ProductDetails = () => {
   const product = useLoaderData();
@@ -49,7 +49,7 @@ const ProductDetails = () => {
       buyer_contact: seller_contact,
       seller_image: user?.photoURL,
     };
-    fetch("http://localhost:3000/bids", {
+    fetch("https://smart-deals-server-alpha.vercel.app/bids", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -74,33 +74,35 @@ const ProductDetails = () => {
       });
   };
 
+  // useEffect(() =>{
+  //   axios.get(`https://smart-deals-server-alpha.vercel.app/products/bids/${productId}`)
+  //   .then((data)=> {
+  //     console.log('bids for this product', data)
 
-// useEffect(() =>{
-//   axios.get(`http://localhost:3000/products/bids/${productId}`)
-//   .then((data)=> {
-//     console.log('bids for this product', data)
+  //   })
+  // },[productId]);
 
-//   })
-// },[productId]);
+  //  useEffect(() => {
+  //   axios
+  //     .get(`https://smart-deals-server-alpha.vercel.app/products/bids/${productId}`)
+  //     .then((res) => {
+  //       console.log("bids for this product", res.data);
+  //       setBids(res.data); // ✅ store only the actual bids array
+  //     })
+  //     .catch((err) => console.error(err));
+  // }, [productId]);
 
-
-//  useEffect(() => {
-//   axios
-//     .get(`http://localhost:3000/products/bids/${productId}`)
-//     .then((res) => {
-//       console.log("bids for this product", res.data);
-//       setBids(res.data); // ✅ store only the actual bids array
-//     })
-//     .catch((err) => console.error(err));
-// }, [productId]);
-
-useEffect(() => {
+  useEffect(() => {
     if (user?.email) {
-      axios.get(`http://localhost:3000/products/bids/${productId}`,{
-        headers:{
-          authorization: `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+      axios
+        .get(
+          `https://smart-deals-server-alpha.vercel.app/products/bids/${productId}`,
+          {
+            headers: {
+              authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        )
         .then((res) => {
           console.log(res.data);
           setBids(res.data);
@@ -108,9 +110,8 @@ useEffect(() => {
     }
   }, [user, productId]);
 
-
   // useEffect(() => {
-  //   fetch(`http://localhost:3000/products/bids/${productId}`)
+  //   fetch(`https://smart-deals-server-alpha.vercel.app/products/bids/${productId}`)
   //     .then((res) => res.json())
   //     .then((data) => {
   //       console.log("bids for this product", data);
@@ -317,7 +318,8 @@ useEffect(() => {
             <tbody>
               {/* row 1 */}
 
-              {bids.map((bid, index) => <tr key={bid._id}>
+              {bids.map((bid, index) => (
+                <tr key={bid._id}>
                   <th>{index + 1} </th>
 
                   <td>
@@ -342,7 +344,7 @@ useEffect(() => {
                     <button className="btn btn-ghost btn-xs">details</button>
                   </th>
                 </tr>
-              )}
+              ))}
               {/* row 2 */}
             </tbody>
           </table>
